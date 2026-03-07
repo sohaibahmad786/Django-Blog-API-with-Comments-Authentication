@@ -7,17 +7,23 @@ from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.authentication import TokenAuthentication,SessionAuthentication
-from rest_framework import permissions,generics
+from rest_framework import permissions
+from rest_framework import generics,filters
 from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Student
 from .serializer import Student_serilizer
 from django.conf import settings
+from rest_framework.filters import SearchFilter
 from datetime import datetime, timedelta
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Register
 from .serializer import Register_serilizer
 from .models import Note
 from .serializer import Note_serilizer
+from .models import Category,Products
+from .serializer import category_serilizer,products_serilizer
 
 
   
@@ -69,3 +75,19 @@ class Note_detail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes=[JWTAuthentication,SessionAuthentication]
     permission_classes=[permissions.IsAuthenticated]
 
+
+# _______________ Products API view _________________
+class Productlistview(generics.ListCreateAPIView):
+    queryset=Products.objects.all()
+    serializer_class=products_serilizer
+    authentication_classes=[JWTAuthentication,SessionAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
+    filter_backends=[DjangoFilterBackend,filters.SearchFilter]
+    filterset_fields=['category']
+    search_fields=['name']
+class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Products.objects.all()
+    serializer_class=products_serilizer
+    authentication_classes=[JWTAuthentication,SessionAuthentication]
+    permission_classes=[permissions.IsAuthenticated]

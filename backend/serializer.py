@@ -4,6 +4,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 from .models import Register
 from .models import Note
+from .models import Category
+from .models import Products
 
 class Student_serilizer(serializers.ModelSerializer):
     class Meta:
@@ -87,4 +89,26 @@ class Note_serilizer(serializers.ModelSerializer):
         model=Note
         fields='__all__'
         read_only_field=['user']
-        
+
+# ____________________ product APi___________________
+class category_serilizer(serializers.ModelSerializer):
+    class Meta:
+        model=Category
+        fields='__all__'
+
+class products_serilizer(serializers.ModelSerializer):
+    class Meta:
+        model=Products
+        fields='__all__'
+    def validate_price(self,value):
+        if value <= 0:
+            raise serializers.ValidationError('Price must be greater than zero')
+        return value
+    def validate_stock(self,value):
+        if value == 0:
+            raise serializers.ValidationError("Stck must be greater than zero")
+        return value
+    def validate_name(self,value):
+        if Products.objects.filter(name=value).exists():
+            raise serializers.ValidationError("Product with this name is already present")
+
