@@ -6,6 +6,7 @@ from .models import Register
 from .models import Note
 from .models import Category
 from .models import Products
+from .models import Post,Comment
 
 class Student_serilizer(serializers.ModelSerializer):
     class Meta:
@@ -112,3 +113,14 @@ class products_serilizer(serializers.ModelSerializer):
         if Products.objects.filter(name=value).exists():
             raise serializers.ValidationError("Product with this name is already present")
 
+# ________________________ Blog APi _________________
+class Comment_serilizer(serializers.ModelSerializer):
+    class Meta:
+        model=Comment
+        fields='__all__'
+class Post_serilizer(serializers.ModelSerializer):
+    comment=Comment_serilizer(many=True,read_only=True)
+
+    class Meta:
+        model=Post
+        fields='__all__'

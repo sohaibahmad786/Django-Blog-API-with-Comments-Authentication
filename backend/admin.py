@@ -6,7 +6,11 @@ from .models import Register
 from .models import Note
 from .models import Category
 from .models import Products
+from .models import Post
+from .models import Comment
 
+admin.site.register(Comment)
+admin.site.register(Post)
 admin.site.register(Products)
 admin.site.register(Category)
 admin.site.register(Note)

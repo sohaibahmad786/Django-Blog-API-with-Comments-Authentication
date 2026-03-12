@@ -24,6 +24,8 @@ from .models import Note
 from .serializer import Note_serilizer
 from .models import Category,Products
 from .serializer import category_serilizer,products_serilizer
+from .models import Post,Comment
+from .serializer import Comment_serilizer,Post_serilizer
 
 
   
@@ -91,3 +93,26 @@ class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=products_serilizer
     authentication_classes=[JWTAuthentication,SessionAuthentication]
     permission_classes=[permissions.IsAuthenticated]
+
+# _______________________ Blog APi_______________________
+class postlist(generics.ListCreateAPIView):
+    queryset=Post.objects.all()
+    serializer_class=Post_serilizer
+    authentication_classes=[JWTAuthentication,SessionAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+class postdetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Post.objects.all()
+    serializer_class=Post_serilizer
+    authentication_classes=[JWTAuthentication,SessionAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+class comment_view(generics.CreateAPIView):
+    queryset=Comment.objects.all()
+    serializer_class=Comment_serilizer
+    authentication_classes=[JWTAuthentication,SessionAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
